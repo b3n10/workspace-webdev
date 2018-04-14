@@ -24,7 +24,9 @@ gulp.task("babel", () => {
 	process.chdir(process.env.INIT_CWD);
 	gulp.src("src/**/*.js")
 		.pipe(babel())
-		.on("error", () => {}) // handle error for babel
+		.on("error", (e) => {
+			console.log(e.message);// handle error for babel
+		})
 		.pipe(gulp.dest("dist"));
 });
 
