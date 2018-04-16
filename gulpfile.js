@@ -25,7 +25,7 @@ gulp.task("babel", () => {
 	gulp.src("src/**/*.js")
 		.pipe(babel())
 		.on("error", (e) => {
-			console.log(e.message);// handle error for babel
+			console.log(`Error: ${e.name}\nMessage: ${e.message}\nLine: ${e.loc.line} Col: ${e.loc.column}`);// handle error for babel
 		})
 		.pipe(gulp.dest("dist"));
 });
