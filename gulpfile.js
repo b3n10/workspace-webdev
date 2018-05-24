@@ -33,12 +33,11 @@ gulp.task("babel", () => {
 gulp.task("watch-all", ["babel", "browser-sync"], () => {
 	// https://css-tricks.com/gulp-for-beginners/#article-header-id-9
 	gulp.watch(["src/**/*.js"], ["babel", browserSync.reload]);
-	gulp.watch(["src/**/*.css"], browserSync.reload);
-	gulp.watch(["src/**/*.html"], ["copy-html", browserSync.reload]);
+	gulp.watch(["**/*.css"], browserSync.reload);
+	gulp.watch(["**/*.html"], browserSync.reload);
 });
 
 gulp.task("watch-html", ["babel", "browser-sync"], () => {
-	gulp.watch(["**/*.js"], ["babel", browserSync.reload]);
 	gulp.watch(["**/*.css"], browserSync.reload);
 	gulp.watch(["**/*.html"], browserSync.reload);
 });
