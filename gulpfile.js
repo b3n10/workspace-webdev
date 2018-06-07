@@ -38,6 +38,7 @@ gulp.task("watch-all", ["babel", "browser-sync"], () => {
 });
 
 gulp.task("watch-html", ["browser-sync"], () => {
+	process.chdir(process.env.INIT_CWD);
 	gulp.watch(["**/*.css"], browserSync.reload);
 	gulp.watch(["**/*.html"], browserSync.reload);
 });
