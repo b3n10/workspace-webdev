@@ -37,7 +37,7 @@ gulp.task("watch-all", ["babel", "browser-sync"], () => {
 	gulp.watch(["**/*.html"], browserSync.reload);
 });
 
-gulp.task("watch-html", ["babel", "browser-sync"], () => {
+gulp.task("watch-html", ["browser-sync"], () => {
 	gulp.watch(["**/*.css"], browserSync.reload);
 	gulp.watch(["**/*.html"], browserSync.reload);
 });
