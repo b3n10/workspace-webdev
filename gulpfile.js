@@ -63,7 +63,7 @@ gulp.task("watch-babel", ["babel"], () => {
 	gulp.watch(["src/**/*.js"], ["babel"]);
 });
 
-// for php structure
+/* for php */
 
 // transpile + minify
 gulp.task('php-babel', () => {
@@ -92,4 +92,44 @@ gulp.task('watch-php', ['php-babel', 'php-mincss'], () => {
 	process.chdir(process.env.INIT_CWD);
 	gulp.watch(['**/src/*/*.js'], ['php-babel']);
 	gulp.watch(['**/src/*/*.css'], ['php-mincss']);
+});
+
+
+/* for js */
+
+gulp.task('jswatch', ['browser-sync'], () => {
+	// https://css-tricks.com/gulp-for-beginners/#article-header-id-9
+	process.chdir(process.env.INIT_CWD);
+
+	gulp.watch(['./app/js/*.js'], () => {
+		gulp.src('./app/js/*.js')
+			.pipe(babel())
+			.on('error', (e) => {
+				console.log(`Error: ${e.name}\nMessage: ${e.message}\nLine: ${e.loc.line} Col: ${e.loc.column}`);// handle error for babel
+			})
+			.pipe(gulp.dest('./dist/'))
+			.pipe(uglify())
+			.pipe(gulp.dest('./dist/'))
+			.pipe(browserSync.reload({
+				stream: true
+			}));
+	});
+
+	gulp.watch(['./app/css/*.css'], () => {
+		gulp.src('./app/css/*.css')
+			.pipe(autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
+			.pipe(csso())
+			.pipe(gulp.dest('./dist/'))
+			.pipe(browserSync.reload({
+				stream: true
+			}));
+	});
+
+	gulp.watch(['./app/index.html'], () => {
+		gulp.src('./app/index.html')
+			.pipe(gulp.dest("./dist/"))
+			.pipe(browserSync.reload({
+				stream: true
+			}));
+	});
 });
