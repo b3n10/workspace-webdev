@@ -1,22 +1,8 @@
 const gulp			= require("gulp"),
 	babel					= require("gulp-babel"),
 	browserSync 	= require("browser-sync").create(),
-	csso 					= require('gulp-csso'),
-	uglify				= require('gulp-uglify'),
-	autoprefixer	= require('gulp-autoprefixer');
-
-// supported browsers
-const AUTOPREFIXER_BROWSERS = [
-	'ie >= 10',
-	'ie_mob >= 10',
-	'ff >= 30',
-	'chrome >= 34',
-	'safari >= 7',
-	'opera >= 23',
-	'ios >= 7',
-	'android >= 4.4',
-	'bb >= 10'
-];
+	cleanCSS 			= require('gulp-clean-css'),
+	uglify				= require('gulp-uglify');
 
 gulp.task("default", () => {
 	return "No task selected.";
@@ -82,8 +68,7 @@ gulp.task('php-babel', () => {
 gulp.task('php-mincss', function () {
 	process.chdir(process.env.INIT_CWD);
 	return gulp.src('./public_html/src/css/style.css')
-		.pipe(autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
-		.pipe(csso())
+		.pipe(cleanCSS())
 		.pipe(gulp.dest('./public_html/dist/css/'));
 });
 
@@ -95,11 +80,21 @@ gulp.task('watch-php', ['php-babel', 'php-mincss'], () => {
 });
 
 
+
 /* for js */
 
-gulp.task('jswatch', ['browser-sync'], () => {
-	// https://css-tricks.com/gulp-for-beginners/#article-header-id-9
+// css minify
+gulp.task('jsmincss', function () {
 	process.chdir(process.env.INIT_CWD);
+	return gulp.src('./app/css/*.css')
+		.pipe(cleanCSS())
+		.pipe(gulp.dest('./dist'));
+});
+
+gulp.task('jswatch', ['browser-sync'], () => {
+	process.chdir(process.env.INIT_CWD);
+
+	gulp.watch(['./app/css/*.css'], ['jsmincss', browserSync.reload]);
 
 	gulp.watch(['./app/js/*.js'], () => {
 		gulp.src('./app/js/*.js')
@@ -109,16 +104,6 @@ gulp.task('jswatch', ['browser-sync'], () => {
 			})
 			.pipe(gulp.dest('./dist/'))
 			.pipe(uglify())
-			.pipe(gulp.dest('./dist/'))
-			.pipe(browserSync.reload({
-				stream: true
-			}));
-	});
-
-	gulp.watch(['./app/css/*.css'], () => {
-		gulp.src('./app/css/*.css')
-			.pipe(autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
-			.pipe(csso())
 			.pipe(gulp.dest('./dist/'))
 			.pipe(browserSync.reload({
 				stream: true
