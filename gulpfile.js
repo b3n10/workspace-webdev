@@ -85,36 +85,36 @@ gulp.task('watch-php', ['php-babel', 'php-mincss'], () => {
 
 // css minify
 gulp.task('jsmincss', function () {
-	process.chdir(process.env.INIT_CWD);
 	return gulp.src('./app/css/*.css')
 		.pipe(cleanCSS())
 		.pipe(gulp.dest('./dist'));
 });
 
+gulp.task('jsbabel', () => {
+	gulp.src('./app/js/*.js')
+		.pipe(babel())
+		.on('error', (e) => {
+			console.log(`Error: ${e.message}`);
+		})
+		.pipe(gulp.dest('./dist/'))
+		.pipe(uglify())
+		.pipe(gulp.dest('./dist/'))
+		.pipe(browserSync.reload({
+			stream: true
+		}));
+});
+
+gulp.task('jscopyhtml', () => {
+	gulp.src('./app/index.html')
+		.pipe(gulp.dest("./dist/"))
+		.pipe(browserSync.reload({
+			stream: true
+		}));
+});
+
 gulp.task('jswatch', ['browser-sync'], () => {
 	process.chdir(process.env.INIT_CWD);
-
 	gulp.watch(['./app/css/*.css'], ['jsmincss', browserSync.reload]);
-
-	gulp.watch(['./app/js/*.js'], () => {
-		gulp.src('./app/js/*.js')
-			.pipe(babel())
-			.on('error', (e) => {
-				console.log(`Error: ${e.name}\nMessage: ${e.message}\nLine: ${e.loc.line} Col: ${e.loc.column}`);// handle error for babel
-			})
-			.pipe(gulp.dest('./dist/'))
-			.pipe(uglify())
-			.pipe(gulp.dest('./dist/'))
-			.pipe(browserSync.reload({
-				stream: true
-			}));
-	});
-
-	gulp.watch(['./app/index.html'], () => {
-		gulp.src('./app/index.html')
-			.pipe(gulp.dest("./dist/"))
-			.pipe(browserSync.reload({
-				stream: true
-			}));
-	});
+	gulp.watch(['./app/js/*.js'], ['jsbabel', browserSync.reload]);
+	gulp.watch(['./app/index.html'], ['jscopyhtml', browserSync.reload]);
 });
