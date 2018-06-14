@@ -53,7 +53,6 @@ gulp.task("watch-babel", ["babel"], () => {
 
 // transpile + minify
 gulp.task('php-babel', () => {
-	process.chdir(process.env.INIT_CWD);
 	gulp.src('./public_html/src/js/*.js')
 		.pipe(babel())
 		.on('error', (e) => {
@@ -64,16 +63,13 @@ gulp.task('php-babel', () => {
 		.pipe(gulp.dest('./public_html/dist/js'));
 });
 
-// minify
 gulp.task('php-mincss', function () {
-	process.chdir(process.env.INIT_CWD);
 	return gulp.src('./public_html/src/css/style.css')
 		.pipe(cleanCSS())
 		.pipe(gulp.dest('./public_html/dist/css/'));
 });
 
-
-gulp.task('watch-php', ['php-babel', 'php-mincss'], () => {
+gulp.task('phpwatch', ['php-babel', 'php-mincss'], () => {
 	process.chdir(process.env.INIT_CWD);
 	gulp.watch(['**/src/*/*.js'], ['php-babel']);
 	gulp.watch(['**/src/*/*.css'], ['php-mincss']);
@@ -83,7 +79,6 @@ gulp.task('watch-php', ['php-babel', 'php-mincss'], () => {
 
 /* for js */
 
-// css minify
 gulp.task('jsmincss', function () {
 	return gulp.src('./app/css/*.css')
 		.pipe(cleanCSS())
