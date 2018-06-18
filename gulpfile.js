@@ -53,20 +53,20 @@ gulp.task("watch-babel", ["babel"], () => {
 
 // transpile + minify
 gulp.task('php-babel', () => {
-	gulp.src('./public_html/src/js/*.js')
+	gulp.src('./public/src/js/*.js')
 		.pipe(babel())
 		.on('error', (e) => {
 			console.log(`Error: ${e.name}\nMessage: ${e.message}\nLine: ${e.loc.line} Col: ${e.loc.column}`);// handle error for babel
 		})
-		.pipe(gulp.dest('./public_html/dist/js'))
+		.pipe(gulp.dest('./public/dist/js'))
 		.pipe(uglify())
-		.pipe(gulp.dest('./public_html/dist/js'));
+		.pipe(gulp.dest('./public/dist/js'));
 });
 
 gulp.task('php-mincss', function () {
-	return gulp.src('./public_html/src/css/style.css')
+	return gulp.src('./public/src/css/*.css')
 		.pipe(cleanCSS())
-		.pipe(gulp.dest('./public_html/dist/css/'));
+		.pipe(gulp.dest('./public/dist/css/'));
 });
 
 gulp.task('phpwatch', ['php-babel', 'php-mincss'], () => {
