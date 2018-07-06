@@ -30,8 +30,7 @@
     "gulp-clean-css": "^3.9.4",
     "gulp-csso": "^3.0.1",
     "gulp-eslint": "^4.0.2",
-    "gulp-uglify": "^3.0.0",
-    "heroku": "^7.5.5"
+    "gulp-uglify": "^3.0.0"
   },
   "dependencies": {
     "npm": "^6.1.0"
